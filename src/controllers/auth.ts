@@ -44,7 +44,7 @@ export const login = async (
       });
     }
     const token = jwt.sign({ id: user._id }, PRIVATE_KEY as string);
-    return res.status(HTTP_STATUS.UNAUTHORIZED).json({
+    return res.status(HTTP_STATUS.OK).json({
       message: RESPONSE_MESSAGES.OK,
       token,
     });

@@ -18,7 +18,9 @@ export enum RESPONSE_MESSAGES {
   VERIFY_EMAIL = "Verify your email!",
   INVALID_TOKEN = "Invalid token",
   SUCCESS = "SUCCESS",
-  EMAIL_NOT_REGISTERED = "Email is not registered"
+  EMAIL_NOT_REGISTERED = "Email is not registered",
+  NOT_FOUND = "Resource is not found",
+  AUTHORIZATION_REQUIRED = 'Authorization is required!'
 }
 
 export enum MONGO_CODE_ERROR {
