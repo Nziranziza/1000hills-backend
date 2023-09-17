@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+import { softDelete } from "../plugins";
+
 const { Schema, model } = mongoose;
 
 const schema = new Schema<any>(
@@ -33,4 +35,6 @@ const schema = new Schema<any>(
   { timestamps: true }
 );
 
-export default model('User', schema)
+schema.plugin(softDelete);
+
+export default model('User', schema);
