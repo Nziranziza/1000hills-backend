@@ -4,7 +4,7 @@ import { softDelete } from "../plugins";
 import { slugify } from "../../utilities";
 
 const { Schema, model } = mongoose;
-const modelName = 'Post';
+const modelName = "Post";
 
 const schema = new Schema<any>(
   {
@@ -26,7 +26,12 @@ const schema = new Schema<any>(
       type: String,
     },
     assets: {
-      type: [{ type: String, required: true }],
+      type: [
+        {
+          url: { type: String, required: true },
+          type: { type: String, required: true, enum: ["image", "video"] },
+        },
+      ],
       validate: {
         validator: function (items: []) {
           return items && items.length > 0;
@@ -38,11 +43,11 @@ const schema = new Schema<any>(
   { timestamps: true }
 );
 
-schema.plugin(softDelete)
+schema.plugin(softDelete);
 
 /**
  * Append a unique slug based on title
- * On create the slug is appended 
+ * On create the slug is appended
  * When document title is update,
  * the slug is regenerated
  */
@@ -63,7 +68,9 @@ schema.plugin(function (schema) {
     const query = this.getQuery() as any;
     if (update?.title) {
       const slug = slugify(update.title);
-      const postWithSameSlug = await mongoose.model(modelName).findOne({ slug });
+      const postWithSameSlug = await mongoose
+        .model(modelName)
+        .findOne({ slug });
       if (!postWithSameSlug) {
         update.slug = slug;
       } else if (query._id.toString() === postWithSameSlug._id.toString()) {

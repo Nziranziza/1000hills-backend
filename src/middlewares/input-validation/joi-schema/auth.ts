@@ -1,7 +1,7 @@
 import Joi, { ValidationOptions } from "joi";
 
 type ObjectSchema = Joi.ObjectSchema;
-const email = Joi.string().email().required();
+const email = Joi.string().email().required().lowercase();
 const password = Joi.string()
   .min(8)
   .pattern(new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])"))
