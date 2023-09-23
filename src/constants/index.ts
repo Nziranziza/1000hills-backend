@@ -57,3 +57,10 @@ export enum RESET_PASSWORD_TEMPLATE_SETTINGS {
 export enum JWT_SETTINGS {
   expiresIn = "24h"
 }
+
+export const REGEX = {
+  URL: /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)(\/[\w-]+(\.[\w-]+)*)*\/?(\?[\w\s&-]+=[\w\s&-]+)*$/,
+  PASSWORD: new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])"),
+  EMAIL: /^\S+@\S+\.\S+$/,
+  PHONE: /^\+(?:[0-9] ?){6,14}[0-9]$/
+};

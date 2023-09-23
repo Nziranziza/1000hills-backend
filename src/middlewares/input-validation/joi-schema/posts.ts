@@ -1,4 +1,4 @@
-import Joi, { Schema, StringSchema, ValidationOptions } from "joi";
+import Joi, { Schema, ValidationOptions } from "joi";
 
 type ObjectSchema = Joi.ObjectSchema;
 
@@ -17,12 +17,13 @@ const schema: ObjectSchema = Joi.object()
     assets: Joi.array()
       .items(
         Joi.object().keys({
-          url: Joi.string().required(),
+          url: Joi.string().uri().required(),
           type: Joi.string().valid("image", "video").lowercase().required(),
         })
       )
       .alter(alterOptions),
   })
+  .min(1)
   .options(options);
 
 export const create = schema.tailor("post");
