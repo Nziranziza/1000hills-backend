@@ -25,6 +25,7 @@ export const getAll = async (
     const posts = await Post.find({
       $or: [{ title: searchConfig }, { description: searchConfig }],
     })
+      .sort({ createdAt: -1 })
       .limit(limitNumber)
       .skip(skip);
     const count = await Post.countDocuments();

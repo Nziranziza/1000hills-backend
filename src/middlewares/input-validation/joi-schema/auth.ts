@@ -1,10 +1,11 @@
 import Joi, { ValidationOptions } from "joi";
+import { REGEX } from "../../../constants";
 
 type ObjectSchema = Joi.ObjectSchema;
 const email = Joi.string().email().required().lowercase();
 const password = Joi.string()
   .min(8)
-  .pattern(new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])"))
+  .pattern(REGEX.PASSWORD)
   .message(
     '"{#label}" must contain at least one lowercase letter, one uppercase letter, one digit, and one special character (!@#$%^&*)'
   )

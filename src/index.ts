@@ -1,7 +1,6 @@
 import "dotenv/config";
 import express, {
   Application,
-  Errback,
   NextFunction,
   Request,
   Response,
@@ -26,14 +25,14 @@ app.use('*', (req, res) => res.status(HTTP_STATUS.NOT_FOUND).json({
   message: 'unexisting path'
 }))
 
-app.use((error: Errback, req: Request, res: Response, next: NextFunction) => {
+app.use((error: any, req: Request, res: Response, next: NextFunction) => {
   if (res.headersSent) {
     return next(error);
   }
   console.log(error)
   const isDev = NODE_ENV === "development";
   return res.status(HTTP_STATUS.SERVER_ERROR).json({
-    message: RESPONSE_MESSAGES.SOMETHING_WRONG,
+    message: error.message as string || RESPONSE_MESSAGES.SOMETHING_WRONG,
     error: isDev ? error : undefined,
   });
 });

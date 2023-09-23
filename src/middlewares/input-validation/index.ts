@@ -9,6 +9,7 @@ import {
   resetPassowrd,
 } from "./joi-schema/auth";
 import { create, update } from "./joi-schema/posts";
+import { updateUser } from "./joi-schema/users";
 import { HTTP_STATUS } from "../../constants";
 
 const inputValidation =
@@ -34,3 +35,5 @@ export const createPostInputValidation: RequestHandler =
   inputValidation(create);
 export const updatePostInputValidation: RequestHandler =
   inputValidation(update);
+export const updateUserInputValidation: RequestHandler =
+  inputValidation(updateUser);
