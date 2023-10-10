@@ -12,6 +12,7 @@ export const updateUser: ObjectSchema = Joi.object()
     phone: Joi.string().regex(REGEX.PHONE).message("Invalid phone number format"),
     bio: Joi.string().max(150),
     profileUrl: Joi.string().uri(),
+    name: Joi.string().min(3)
   })
   .min(1)
   .options(options);
