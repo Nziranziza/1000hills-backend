@@ -47,14 +47,9 @@ const schema = new Schema<any>(
     bio: {
       type: String,
     },
+    //TODO: Create a better regex for url
     profileUrl: {
       type: String,
-      validate: {
-        validator: function (value: string) {
-          return REGEX.URL.test(value);
-        },
-        message: "Invalid URL format",
-      },
     },
   },
   { timestamps: true }
