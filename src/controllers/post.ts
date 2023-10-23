@@ -1,9 +1,11 @@
 import { NextFunction, Request, Response, RequestHandler } from "express";
 import { ParamsDictionary } from "express-serve-static-core";
 import { Types } from "mongoose";
+import { ObjectId } from "mongodb";
 
 import { Post } from "../database/models";
 import { HTTP_STATUS, RESPONSE_MESSAGES } from "../constants";
+
 
 type Query = {
   search: string;
@@ -43,6 +45,88 @@ export const getAll = async (
     return next(error);
   }
 };
+
+export const getAllForUser = async (
+  req: Request<ParamsDictionary, any, any, Query>,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { limit = 10, page = 1 } = req.query;
+    const limitNumber = Number(limit);
+    const pageNumber = Number(page);
+    const skip = (pageNumber - 1) * limitNumber;
+    const userId = req.params.userId || req.headers.userId;
+    const posts = await Post.find({ userId })
+      .sort({ createdAt: -1 })
+      .limit(limitNumber)
+      .skip(skip);
+    const count = await Post.countDocuments({ userId });
+    const [stats] = await Post.aggregate([
+      { $match: { userId }},
+      {
+        $project: {
+          hasVideoAssets: {
+            $cond: {
+              if: {
+                $gt: [
+                  {
+                    $size: {
+                      $filter: {
+                        input: "$assets",
+                        as: "asset",
+                        cond: {
+                          $eq: [
+                            "$$asset.type",
+                            "video",
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  0,
+                ],
+              },
+              then: 1,
+              else: 0,
+            },
+          },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          video: { $sum: "$hasVideoAssets" },
+          image: {
+            $sum: {
+              $subtract: [1, "$hasVideoAssets"],
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          video: 1,
+          image: 1,
+        },
+      },
+    ])
+    return res.status(HTTP_STATUS.OK).json({
+      message: RESPONSE_MESSAGES.SUCCESS,
+      meta: {
+        page: pageNumber,
+        limit: limitNumber,
+        totalPages: Math.ceil(count / limitNumber) || 1,
+        count,
+        stats
+      },
+      data: posts,
+    });
+  } catch(error) {
+    return next(error);
+  }
+}
 
 export const getOne: RequestHandler = async (req, res, next) => {
   try {
