@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { usersController } from "../controllers";
+import { usersController, postController } from "../controllers";
 import { requireLogin, updateUserInputValidation } from "../middlewares";
 
 const userRouter: Router = Router();
@@ -11,5 +11,7 @@ userRouter
   .get(usersController.getCurrent)
   .put(updateUserInputValidation, usersController.update)
   .delete(usersController.deleteOne);
+
+userRouter.get("/posts", postController.getAllForUser);
 
 export default userRouter;
